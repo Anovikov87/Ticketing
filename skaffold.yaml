@@ -1,0 +1,57 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    push: false
+  #googleCloudBuild:
+  #  projectId: ticketing-danger
+  artifacts:
+    #- image: gcr.io/ticketing-danger/auth
+    - image: dang3rouz/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    #- image:        gcr.io/ticketing-danger/ticketclient
+    - image: dang3rouz/ticketclient
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "**/*.js"
+            dest: .
+    #- image:        gcr.io/ticketing-danger/tickets
+    - image: dang3rouz/tickets
+      context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    #- image: gcr.io/ticketing-danger/orders
+    - image: dang3rouz/orders
+      context: orders
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    #- image: gcr.io/ticketing-danger/expiration
+    - image: dang3rouz/expiration
+      context: expiration
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
